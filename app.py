@@ -2,6 +2,7 @@ import pymongo
 from config import *
 from pymongo import MongoClient
 import matplotlib.pyplot as plt
+from datetime import datetime
 
 cluster = MongoClient(MONGOCODE)  
 db = cluster["ClickStats"]
@@ -13,9 +14,11 @@ all_scores = []
 class GeneralCorpsDataManager:
     def __init__(self, collection):
         self.collection = collection
-    def getAllScores(self, corps):
+    def getAllScores(self, corps, year):
         print("[GeneralCorpsDataManager] Getting all scores for: " + corps)
-        scores = self.collection.find({"Corps": corps}).sort("Date")
+        start = datetime.datetime(year, 6, 1)
+        end = datetime.datetime(year, 9, 1)
+        scores = self.collection.find({"Corps": corps}, {"Date": {'$lt': end, '$gte': start}}).sort("Date")
         for score in scores:
             all_scores.append(score["Score"])
             all_years.append(score["Date"])
@@ -29,7 +32,7 @@ corps = ["Bluecoats", "Blue Devils", "Carolina Crown", "The Cavaliers", "Phantom
 for corp in corps:
     corps_manager.getAllScores(corp)
 
-plt.title('Blue Devils Score By Year')
+plt.title('DCI Scores By Year')
 plt.xlabel('Year')
 plt.legend(loc="upper left")
 plt.ylabel('Score')
