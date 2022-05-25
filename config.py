@@ -1,0 +1,1 @@
+MONGOCODE = "mongodb+srv://jacob1241:9KSPy62WTVxAKGFG@cluster0.8bxa6.mongodb.net/?retryWrites=true&w=majority"
